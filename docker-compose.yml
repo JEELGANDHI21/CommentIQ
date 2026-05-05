@@ -1,0 +1,24 @@
+services:
+
+  backend:
+    build: ./backend
+    container_name: yt_backend
+    env_file: .env
+    volumes:
+      - ./outputs:/app/outputs          # persist report files
+      - hf_cache:/root/.cache/huggingface  # cache HuggingFace models between restarts
+    ports:
+      - "8000:8000"                     # optional: direct API access for debugging
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: yt_frontend
+    ports:
+      - "3000:80"                       # app available at http://localhost:3000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  hf_cache:                             # named volume so model isn't re-downloaded on restart

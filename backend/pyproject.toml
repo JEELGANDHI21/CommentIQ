@@ -1,0 +1,15 @@
+[project]
+name = "sentitube"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiosqlite>=0.22.1",
+    "emoji>=2.15.0",
+    "fastapi>=0.136.1",
+    "pandas>=3.0.2",
+    "python-multipart>=0.0.9",
+    "sentence-transformers>=5.4.1",
+    "uvicorn[standard]>=0.29.0",
+]

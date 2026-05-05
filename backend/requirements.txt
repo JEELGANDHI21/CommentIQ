@@ -1,0 +1,25 @@
+# Backend API
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+
+# Pipeline — Stage 1
+google-api-python-client>=2.100.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# Pipeline — Stage 2
+sentence-transformers>=2.7.0
+pandas>=2.1.0
+
+# Pipeline — Stage 3
+transformers>=4.40.0
+torch>=2.2.0
+emoji>=2.0.0
+
+# Pipeline — Stage 4 (uses llm_client.py via requests, no extra install)
+
+# Authentication
+python-jose[cryptography]>=3.3.0
+passlib>=1.7.4                      # sha256_crypt built-in, no bcrypt version conflict
+python-multipart>=0.0.9
