@@ -6,7 +6,7 @@
 
 | Home | Result 1 | Result 2 |
 |------|-----------|-----------|
-| ![Home](screenshots/home.png) | ![Result1](screenshots/output1.png) | ![Result2](screenshots/output2.png) |
+| ![Home](screenshots/Home.png) | ![Result1](screenshots/Output1.png) | ![Result2](screenshots/Output2.png) |
 
 ---
 
@@ -199,6 +199,3 @@ You'll get a public URL like `https://xxxx.trycloudflare.com`.
 
 ---
 
-## License
-
-MIT
