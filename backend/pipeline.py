@@ -1,7 +1,3 @@
-"""
-pipeline.py — Background pipeline runner with DB state + report caching
-"""
-
 import logging
 import traceback
 

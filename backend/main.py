@@ -1,7 +1,3 @@
-"""
-FastAPI Backend — CommentIQ
-"""
-
 import uuid
 import asyncio
 import logging

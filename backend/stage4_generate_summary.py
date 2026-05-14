@@ -1,11 +1,3 @@
-"""
-Stage 4 — AI Summary
-======================
-Reads the sentiment-enriched CSV from Stage 3, builds a structured context
-from the sentiment data, and uses OpenRouter to generate a rich, human-readable
-video summary report.
-"""
-
 import json
 import logging
 from dataclasses import dataclass, asdict
@@ -31,13 +23,13 @@ class VideoReport:
     negative_pct: float
     neutral_pct: float
     avg_relevance_score: float
-    avg_weighted_sentiment: float          # new — mean of polarity × relevance
+    avg_weighted_sentiment: float          
     top_liked_comment: str
     top_liked_count: int
     most_positive_comment: str
-    most_positive_polarity: float          # was most_positive_score
+    most_positive_polarity: float          
     most_negative_comment: str
-    most_negative_polarity: float          # was most_negative_score
+    most_negative_polarity: float          
     ai_overall_sentiment: str
     ai_praise_themes: str
     ai_criticism_themes: str
@@ -142,17 +134,17 @@ def generate_ai_sections(context: str) -> dict:
 
     praise = _llm(
         f"{context}\n\nBased on the positive comments and top emotions detected, "
-        "write 2–3 sentences describing the specific things viewers praised. "
+        "write 2-3 sentences describing the specific things viewers praised. "
         "Name concrete themes and reference the dominant emotions (e.g. amusement, excitement, admiration).", 200)
     log.info("  ✓ Praise themes")
 
     criticism = _llm(
-        f"{context}\n\nBased on the negative comments and emotions, write 2–3 sentences "
+        f"{context}\n\nBased on the negative comments and emotions, write 2-3 sentences "
         "describing specific criticisms or concerns. If negative comments are very few, note that too.", 200)
     log.info("  ✓ Criticism themes")
 
     verdict = _llm(
-        f"{context}\n\nWrite a single verdict paragraph (3–5 sentences) a content creator "
+        f"{context}\n\nWrite a single verdict paragraph (3-5 sentences) a content creator "
         "could read to quickly understand how their audience received this video — "
         "overall reaction, strongest emotions, one key takeaway.", 250)
     log.info("  ✓ Verdict")

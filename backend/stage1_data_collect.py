@@ -1,22 +1,3 @@
-"""
-Stage 1 — Data Collection
-=========================
-Fetches YouTube comments (via YouTube Data API v3) and generates a video
-summary from the description via OpenRouter LLM.
-
-No transcript is required — the summary is built entirely from the video
-title and description, which are always available via the API.
-
-Requirements:
-    pip install google-api-python-client python-dotenv requests
-
-Setup:
-    Create a .env file (or set env vars) with:
-        YOUTUBE_API_KEY=your_youtube_data_api_v3_key
-        OPENROUTER_API_KEY=sk-or-...
-        OPENROUTER_MODEL=meta-llama/llama-3.3-70b-instruct  # optional
-"""
-
 import os
 import re
 import time
@@ -33,11 +14,6 @@ from llm_client import get_client
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 log = logging.getLogger(__name__)
-
-
-# ---------------------------------------------------------------------------
-# Data classes
-# ---------------------------------------------------------------------------
 
 @dataclass
 class Comment:
@@ -66,10 +42,6 @@ class VideoData:
     comments: list[Comment] = field(default_factory=list)
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def extract_video_id(url_or_id: str) -> str:
     """Accept a full YouTube URL or a bare video ID and return the 11-char ID."""
     patterns = [
@@ -89,10 +61,6 @@ def build_youtube_client(api_key: str):
     return build("youtube", "v3", developerKey=api_key, cache_discovery=False)
 
 
-# ---------------------------------------------------------------------------
-# Video metadata
-# ---------------------------------------------------------------------------
-
 def fetch_video_metadata(youtube, video_id: str) -> dict:
     """Return raw snippet + statistics for a single video."""
     response = youtube.videos().list(
@@ -104,11 +72,6 @@ def fetch_video_metadata(youtube, video_id: str) -> dict:
     if not items:
         raise ValueError(f"No video found for ID: {video_id}")
     return items[0]
-
-
-# ---------------------------------------------------------------------------
-# Comment fetching
-# ---------------------------------------------------------------------------
 
 def fetch_comments(
     youtube,
@@ -200,10 +163,6 @@ def fetch_comments(
     return comments
 
 
-# ---------------------------------------------------------------------------
-# Video summary (description-based, no transcript needed)
-# ---------------------------------------------------------------------------
-
 def build_video_summary(title: str, description: str) -> str:
     """
     Generate a rich topic summary using OpenRouter LLM.
@@ -219,7 +178,7 @@ def build_video_summary(title: str, description: str) -> str:
         description: YouTube video description field.
 
     Returns:
-        A 3–5 sentence plain-text summary of the video's topics and themes.
+        A 3-5 sentence plain-text summary of the video's topics and themes.
     """
     context_parts = []
     if title:
@@ -262,10 +221,7 @@ def build_video_summary(title: str, description: str) -> str:
         return f"{title}. " + " ".join(sentences[:2]) if sentences else title
 
 
-# ---------------------------------------------------------------------------
-# Main entry point
-# ---------------------------------------------------------------------------
-
+# Main
 def collect(
     video_url_or_id: str,
     max_comments: int = 500,

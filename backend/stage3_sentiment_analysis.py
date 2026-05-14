@@ -1,11 +1,3 @@
-"""
-Stage 3 — Sentiment Analysis
-==============================
-Model: SamLowe/roberta-base-go_emotions (28 emotion labels)
-Slang: Gen Z normalization layer before model inference
-Output: emotion, polarity, subjectivity, sentiment, weighted_sentiment
-"""
-
 import logging
 import re
 from dataclasses import dataclass
@@ -20,17 +12,13 @@ MODEL_NAME = "SamLowe/roberta-base-go_emotions"
 _pipeline  = None
 
 
-# ---------------------------------------------------------------------------
-# Emotion → sentiment + polarity mapping
-# ---------------------------------------------------------------------------
-
 EMOTION_TO_SENTIMENT = {
     "admiration":      "positive",
-    "amusement":       "positive",    # "killed me", "i'm dead 💀"
+    "amusement":       "positive",   
     "approval":        "positive",
     "caring":          "positive",
     "desire":          "positive",
-    "excitement":      "positive",    # "holy shit he's back"
+    "excitement":      "positive",    
     "gratitude":       "positive",
     "joy":             "positive",
     "love":            "positive",
@@ -69,9 +57,6 @@ EMOTION_POLARITY = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Gen Z slang normalization
-# ---------------------------------------------------------------------------
 
 SLANG_PATTERNS = [
     # ── Emotional / sentimental language (misread as negative by model) ──
@@ -165,14 +150,6 @@ def normalize_slang(text: str) -> str:
         text = pattern.sub(replacement, text)
     return text
 
-
-# ---------------------------------------------------------------------------
-# Positive emoji override
-# ---------------------------------------------------------------------------
-
-# These emojis — when present — almost always signal positive or emotional-positive
-# intent, even when the surrounding text seems sad or negative to the model.
-# 😭 and 🥹 in internet culture = overwhelmed with positive emotion, NOT sad.
 POSITIVE_OVERRIDE_EMOJIS = {
     ":red_heart:", ":orange_heart:", ":yellow_heart:",
     ":green_heart:", ":blue_heart:", ":purple_heart:",
@@ -182,10 +159,10 @@ POSITIVE_OVERRIDE_EMOJIS = {
     ":heart_with_arrow:", ":heart_with_ribbon:",
     ":smiling_face_with_3_hearts:",      # 🥰
     ":smiling_face_with_heart-eyes:",    # 😍
-    ":face_holding_back_tears:",         # 🥹 Gen Z = overwhelmed positive
-    ":loudly_crying_face:",              # 😭 internet = so good it hurts
+    ":face_holding_back_tears:",         # 🥹 
+    ":loudly_crying_face:",              # 😭 
     ":pleading_face:",                   # 🥺
-    ":folded_hands:",                    # 🙏 = gratitude
+    ":folded_hands:",                    # 🙏 
     ":star-struck:",                     # 🤩
     ":fire:",                            # 🔥
     ":crown:",                           # 👑
@@ -215,11 +192,6 @@ def apply_emoji_override(clean_text: str, result: dict) -> dict:
         result["emotion"]   = "realization"   # most neutral fallback emotion
     return result
 
-
-# ---------------------------------------------------------------------------
-# Text cleaning
-# ---------------------------------------------------------------------------
-
 def clean_text(text: str) -> str:
     try:
         import emoji as emoji_lib
@@ -235,10 +207,6 @@ def clean_text(text: str) -> str:
     text = text.strip()
     return text if text else "no comment"
 
-
-# ---------------------------------------------------------------------------
-# Model
-# ---------------------------------------------------------------------------
 
 def _get_pipeline():
     global _pipeline
@@ -289,11 +257,6 @@ def get_sentiment(text: str) -> dict:
     # (clean_text already has emojis converted to :emoji_name: tokens)
     result = apply_emoji_override(text, result)
     return result
-
-
-# ---------------------------------------------------------------------------
-# Result + main
-# ---------------------------------------------------------------------------
 
 @dataclass
 class SentimentResult:

@@ -1,28 +1,3 @@
-"""
-Stage 2 — Relevance Filter
-===========================
-Embeds the video summary and each comment using a sentence-transformer model,
-computes cosine similarity, and writes relevant comments to a CSV file.
- 
-Comments whose similarity score meets the threshold are kept; the rest are
-discarded (or optionally written to a separate rejection log).
- 
-Requirements:
-    pip install sentence-transformers pandas
- 
-How it works:
-    1. Embed the video summary → one reference vector.
-    2. Embed all comment texts in a single batch → comment vectors.
-    3. Compute cosine similarity between each comment vector and the reference.
-    4. Keep comments where similarity >= threshold (default 0.20).
-    5. Write kept comments + metadata + score to relevant_comments.csv.
- 
-Threshold guide:
-    0.15 — very loose  (keeps most comments; good for general/vague videos)
-    0.20 — balanced    (default; works well for most music/talk videos)
-    0.30 — strict      (only tightly on-topic comments; good for tutorial videos)
-"""
-
 import logging
 import os
 from dataclasses import dataclass, field
