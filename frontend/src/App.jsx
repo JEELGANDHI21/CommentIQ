@@ -388,17 +388,17 @@ export default function App() {
               What does the<br /><em>internet</em> think?
             </h1>
             <p className="hero-sub">
-              Drop any YouTube URL. We collect comments, filter noise,
-              classify sentiment with RoBERTa, and generate an AI report.
+             Drop any content URL. We analyze audience discussions, identify meaningful feedback, 
+             and generate actionable AI insights.
             </p>
             <div className="hero-form-wrap">
               <UrlForm onSubmit={handleSubmit} loading={false} />
             </div>
-            <div className="tech-pills">
+           {/* <div className="tech-pills">
               {['RoBERTa', 'MiniLM-L6', 'OpenRouter', 'FastAPI'].map(t => (
                 <span key={t} className="tech-pill">{t}</span>
               ))}
-            </div>
+            </div> */}
           </div>
         )}
 

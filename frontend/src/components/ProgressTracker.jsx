@@ -1,10 +1,10 @@
 import { Check, Circle, Loader } from 'lucide-react'
 
 const STAGES = [
-  { n: 1, label: 'Collecting comments',         desc: 'YouTube API + AI summary' },
-  { n: 2, label: 'Filtering relevant comments', desc: 'Cosine similarity matching' },
-  { n: 3, label: 'Analysing sentiment',         desc: 'RoBERTa classification' },
-  { n: 4, label: 'Generating AI report',        desc: 'OpenRouter synthesis' },
+  { n: 1, label: 'Collecting comments',         desc: 'Aggregating audience feedback' },
+  { n: 2, label: 'Filtering relevant comments', desc: 'Identifying meaningful insights' },
+  { n: 3, label: 'Analysing sentiment',         desc: 'Understanding audience perception' },
+  { n: 4, label: 'Generating AI report',        desc: 'Creating actionable summaries' },
 ]
 
 export default function ProgressTracker({ stage, progressPct, status }) {

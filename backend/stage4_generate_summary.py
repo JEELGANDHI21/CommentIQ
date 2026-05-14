@@ -52,23 +52,27 @@ def _build_context(df: pd.DataFrame, video_summary: str) -> str:
     neg = (df["sentiment"] == "negative").sum()
     neu = (df["sentiment"] == "neutral").sum()
 
-    # Use subjectivity (model confidence) for ranking — matches Stage 3 columns
+    # Top emotions breakdown (new with go_emotions)
+    if "emotion" in df.columns:
+        top_emotions = df["emotion"].value_counts().head(5).to_dict()
+        emotions_str = ", ".join(f"{k} ({v})" for k, v in top_emotions.items())
+    else:
+        emotions_str = "N/A"
+
+    # Use subjectivity (model confidence) for ranking
     top_pos = (
         df[df["sentiment"] == "positive"]
-        .nlargest(10, "subjectivity")["text"].tolist()          # ← was sentiment_score
+        .nlargest(10, "subjectivity")["text"].tolist()
     )
     top_neg = (
         df[df["sentiment"] == "negative"]
-        .nlargest(10, "subjectivity")["text"].tolist()          # ← was sentiment_score
+        .nlargest(10, "subjectivity")["text"].tolist()
     )
-
-    # Top by weighted_sentiment — most relevant AND most emotionally strong
     top_weighted = (
         df.nlargest(5, "weighted_sentiment")
         [["text", "like_count", "sentiment", "weighted_sentiment"]]
         .to_dict("records")
     )
-
     top_liked = (
         df.nlargest(5, "like_count")
         [["text", "like_count", "sentiment"]].to_dict("records")
@@ -97,13 +101,16 @@ SENTIMENT BREAKDOWN ({total} relevant comments):
   Negative : {neg} ({100*neg/total:.1f}%)
   Neutral  : {neu} ({100*neu/total:.1f}%)
 
+TOP EMOTIONS DETECTED:
+  {emotions_str}
+
 TOP POSITIVE COMMENTS (by model confidence):
 {fmt(top_pos)}
 
 TOP NEGATIVE COMMENTS (by model confidence):
 {fmt(top_neg)}
 
-TOP COMMENTS BY WEIGHTED SENTIMENT (relevance × polarity — best overall signal):
+TOP COMMENTS BY WEIGHTED SENTIMENT (relevance × polarity):
 {fmt_weighted(top_weighted)}
 
 MOST LIKED COMMENTS:
@@ -134,13 +141,14 @@ def generate_ai_sections(context: str) -> dict:
     log.info("  ✓ Overall sentiment")
 
     praise = _llm(
-        f"{context}\n\nBased only on the positive comments, write 2–3 sentences describing "
-        "the specific things viewers praised. Name concrete themes.", 200)
+        f"{context}\n\nBased on the positive comments and top emotions detected, "
+        "write 2–3 sentences describing the specific things viewers praised. "
+        "Name concrete themes and reference the dominant emotions (e.g. amusement, excitement, admiration).", 200)
     log.info("  ✓ Praise themes")
 
     criticism = _llm(
-        f"{context}\n\nBased only on the negative comments, write 2–3 sentences describing "
-        "specific criticisms or concerns. If very few, note that too.", 200)
+        f"{context}\n\nBased on the negative comments and emotions, write 2–3 sentences "
+        "describing specific criticisms or concerns. If negative comments are very few, note that too.", 200)
     log.info("  ✓ Criticism themes")
 
     verdict = _llm(
