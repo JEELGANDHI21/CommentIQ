@@ -269,3 +269,5 @@ comment_files — CSV paths for /comments endpoint lookup
 | `VITE_API_TARGET` | ❌ | `http://localhost:8000` | Backend URL for Vite dev proxy |
 
 ---
+
+<p align="center">Built with ❤️ for learning AI development</p>
